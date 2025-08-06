@@ -7,15 +7,15 @@ jobs:
   update-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: 🧾 Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Cache node modules
+      - name: 💾 Cache node modules
         uses: actions/cache@v3
         with:
           path: node_modules
@@ -23,16 +23,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-modules-
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run update script
-        run: node scripts/updateVotes.js
-
-      - name: Push changes
+      - name: 📦 Install dependencies
         run: |
+          echo "🔍 Installing npm packages..."
+          npm install
+
+      - name: ▶️ Run update script
+        run: |
+          echo "🚀 Running updateVotes.js..."
+          node scripts/updateVotes.js
+          echo "✅ Script finished running."
+
+      - name: 🚚 Push changes to repo
+        run: |
+          echo "🔧 Configuring Git..."
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          echo "📂 Adding modified files..."
           git add .
-          git commit -m "Update rollingVotes.json"
+
+          echo "📝 Committing changes..."
+          git commit -m "Update rollingVotes.json" || echo "⚠️ Nothing to commit"
+
+          echo "🔐 Pushing to repo..."
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/aroan-v/vpa-gap-cache.git
+
+          echo "✅ Push completed."
