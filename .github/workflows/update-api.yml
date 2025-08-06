@@ -1,23 +1,52 @@
 name: Update rollingVotes.json
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:       # 🚀 Manual trigger only
 
 jobs:
-  update:
+  update-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false # we handle credentials manually
+      - name: 🧾 Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Commit and Push
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 💾 Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: 📦 Install dependencies
         run: |
-          echo "Update at $(date)" > rollingVotes.json
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git add rollingVotes.json
-          git commit -m "Update rollingVotes.json"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aroan-v/vpa-gap-cache.git
-          git push
+          echo "🔍 Installing npm packages..."
+          npm install
+
+      - name: ▶️ Run update script
+        run: |
+          echo "🚀 Running updateVotes.js..."
+          node scripts/updateVotes.js
+          echo "✅ Script finished running."
+
+      - name: 🚚 Push changes to repo
+        run: |
+          echo "🔧 Configuring Git..."
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          echo "📂 Adding modified files..."
+          git add .
+
+          echo "📝 Committing changes..."
+          git commit -m "Update rollingVotes.json" || echo "⚠️ Nothing to commit"
+
+          echo "🔐 Pushing to repo..."
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/aroan-v/vpa-gap-cache.git
+
+          echo "✅ Push completed."
