@@ -1,18 +1,35 @@
 {
-  "times": [],
+  "times": [
+    "9:31 PM"
+  ],
   "voteIncrements": {
-    "KISH": [],
-    "DUSTBIA": [],
-    "BREKA": [],
-    "WILLCA": [],
-    "AZRALPH": []
+    "KISH": [
+      -46
+    ],
+    "DUSTBIA": [
+      -21083
+    ],
+    "BREKA": [
+      -7
+    ],
+    "WILLCA": [
+      -19864
+    ],
+    "AZRALPH": [
+      -3
+    ]
   },
   "baselineVotes": {
-    "KISH": 64490,
-    "DUSTBIA": 14133286,
-    "BREKA": 104307,
-    "WILLCA": 13357313,
-    "AZRALPH": 159126
+    "KISH": 64444,
+    "DUSTBIA": 14112203,
+    "BREKA": 104300,
+    "WILLCA": 13337449,
+    "AZRALPH": 159123
   },
-  "updateTimesPH": []
+  "updateTimesPH": [
+    "08/06/2025, 21:40:28"
+  ],
+  "voteGap": [
+    -774754
+  ]
 }
