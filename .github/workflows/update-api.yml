@@ -1,9 +1,7 @@
 name: Update rollingVotes.json
 
 on:
-  schedule:
-    - cron: "0 * * * *" # ⏰ Every hour
-  workflow_dispatch:       # 🚀 Manual trigger option
+  workflow_dispatch:       # 🚀 Manual trigger only
 
 jobs:
   update-api:

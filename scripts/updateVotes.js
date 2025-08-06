@@ -107,26 +107,48 @@ async function fetchAndUpdateVotes() {
     rollingData.times.push(timeLabel);
     rollingData.updateTimesPH.push(nowPH); // ⏱️ Push PH time
 
+
     for (const [name, current] of Object.entries(currentVotes)) {
       const prev = rollingData.baselineVotes[name] || 0;
       const diff = current - prev;
 
       if (!rollingData.voteIncrements[name]) {
+        // Fill with nulls if it's the first time we see this participant
         rollingData.voteIncrements[name] = Array(rollingData.times.length - 1).fill(null);
       }
 
       rollingData.voteIncrements[name].push(diff);
     }
 
+    // === Compute WILLCA - DUSTBIA gap ===
+    const willcaVotes = currentVotes["WILLCA"] || 0;
+    const dustbiaVotes = currentVotes["DUSTBIA"] || 0;
+    const gap = willcaVotes - dustbiaVotes;
+
+    if (!rollingData.voteGap) {
+      // Initialize voteGap array if not present yet
+      rollingData.voteGap = Array(rollingData.times.length - 1).fill(null);
+    }
+
+    rollingData.voteGap.push(gap);
+
+
+
     // === Trim if over max
     if (rollingData.times.length > MAX_ENTRIES) {
       const excess = rollingData.times.length - MAX_ENTRIES;
       rollingData.times.splice(0, excess);
       rollingData.updateTimesPH.splice(0, excess); // ✂️ Trim this too
+
       for (const name in rollingData.voteIncrements) {
         rollingData.voteIncrements[name].splice(0, excess);
       }
+
+      if (rollingData.voteGap) {
+        rollingData.voteGap.splice(0, excess);
+      }
     }
+
 
     rollingData.baselineVotes = currentVotes;
     saveData(rollingData);
