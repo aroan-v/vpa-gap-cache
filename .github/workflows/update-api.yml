@@ -29,10 +29,12 @@ jobs:
       - name: Run update script
         run: node scripts/updateVotes.js
 
-      - name: Push changes
+      - name: Push final report to GitHub
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add .
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
+          git add rollingVotes.json
           git commit -m "Update rollingVotes.json"
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/aroan-v/vpa-vote-cache.git
+          git push
+
