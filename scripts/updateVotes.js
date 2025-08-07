@@ -68,17 +68,18 @@ async function fetchAndUpdateVotes() {
     // Load local file
     const rollingData = loadData();
 
-    // 🛡️ Prevent duplicates
-    if (rollingData.times.includes(timeLabel)) {
-      console.log("🟡 Duplicate timestamp, skipping update.");
-      return;
-    }
-
+    
     // ✅ Make sure updateTimesPH exists
     if (!rollingData.updateTimesPH) {
       rollingData.updateTimesPH = [];
     }
-
+    
+    // 🛡️ Prevent duplicates
+    if (rollingData.updateTimesPH.includes(nowPH)) {
+      console.log("🟡 Duplicate timestamp, skipping update.");
+      return;
+    }
+    
     const currentVotes = {};
     for (const [id, info] of Object.entries(data.participants)) {
       const name = participantNames[id] || id.slice(-6);
